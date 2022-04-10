@@ -1,4 +1,4 @@
-package fun.fengwk.commons.idgen;
+package fun.fengwk.commons.idgen.snowflakes;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class SnowflakesIdGeneratorTest {
 
     @Test
     public void test() {
-        SnowflakesIdGenerator snowflakesIdGenerator = new SnowflakesIdGenerator(System.currentTimeMillis(), 0);
+        SnowflakesIdGenerator snowflakesIdGenerator = new SnowflakesIdGenerator(System.currentTimeMillis(), new FixedWorkerIdClient(0L));
         long id1 = snowflakesIdGenerator.next();
         long id2 = snowflakesIdGenerator.next();
         assert id2 > id1;

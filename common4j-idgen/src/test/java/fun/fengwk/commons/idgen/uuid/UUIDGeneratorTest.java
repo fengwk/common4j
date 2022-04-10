@@ -1,4 +1,4 @@
-package fun.fengwk.commons.idgen;
+package fun.fengwk.commons.idgen.uuid;
 
 import org.junit.Test;
 

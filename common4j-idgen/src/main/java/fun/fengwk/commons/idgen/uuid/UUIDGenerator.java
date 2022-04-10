@@ -1,4 +1,6 @@
-package fun.fengwk.commons.idgen;
+package fun.fengwk.commons.idgen.uuid;
+
+import fun.fengwk.commons.idgen.IdGenerator;
 
 import java.util.UUID;
 
@@ -21,6 +23,11 @@ public class UUIDGenerator implements IdGenerator<String> {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public void close(boolean releaseResource) throws Exception {
+        // nothing to do
     }
 
 }

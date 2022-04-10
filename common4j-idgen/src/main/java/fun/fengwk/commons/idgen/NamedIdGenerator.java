@@ -27,4 +27,9 @@ public class NamedIdGenerator<ID> implements IdGenerator<ID> {
         return name;
     }
 
+    @Override
+    public void close(boolean releaseResource) throws Exception {
+        idGenerator.close(releaseResource);
+    }
+
 }

@@ -1,6 +1,7 @@
 package fun.fengwk.commons.i18n;
 
 import java.lang.reflect.Proxy;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -63,12 +64,13 @@ public class StringManagerFactory {
      * @param <T>
      * @param proxyClass
      * @param keyPrefix
+     * @param classLoader
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T> T getStringManagerProxy(Class<T> proxyClass, String keyPrefix) {
+    public <T> T getStringManagerProxy(Class<T> proxyClass, String keyPrefix, ClassLoader classLoader) {
         return (T) stringManagerProxyRegistry.computeIfAbsent(
-                proxyClass, k -> createProxy(proxyClass, getStringManager(keyPrefix)));
+                proxyClass, k -> createProxy(proxyClass, getStringManager(keyPrefix), classLoader));
     }
     
     /**
@@ -78,12 +80,13 @@ public class StringManagerFactory {
      * @param <T>
      * @param proxyClass
      * @param keyPrefixClass
+     * @param classLoader
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T> T getStringManagerProxy(Class<T> proxyClass, Class<?> keyPrefixClass) {
+    public <T> T getStringManagerProxy(Class<T> proxyClass, Class<?> keyPrefixClass, ClassLoader classLoader) {
         return (T) stringManagerProxyRegistry.computeIfAbsent(
-                proxyClass, k -> createProxy(proxyClass, getStringManager(keyPrefixClass)));
+                proxyClass, k -> createProxy(proxyClass, getStringManager(keyPrefixClass), classLoader));
     }
     
     /**
@@ -92,15 +95,16 @@ public class StringManagerFactory {
      * 
      * @param <T>
      * @param proxyClass
+     * @param classLoader
      * @return
      */
-    public <T> T getStringManagerProxy(Class<T> proxyClass) {
-        return getStringManagerProxy(proxyClass, proxyClass);
+    public <T> T getStringManagerProxy(Class<T> proxyClass, ClassLoader classLoader) {
+        return getStringManagerProxy(proxyClass, proxyClass, classLoader);
     }
     
-    private Object createProxy(Class<?> proxyClass, StringManager stringManager) {
+    private Object createProxy(Class<?> proxyClass, StringManager stringManager, ClassLoader classLoader) {
         return Proxy.newProxyInstance(
-                ClassLoaderUtils.getDefault(), 
+                classLoader,
                 new Class<?>[] { proxyClass }, 
                 new StringManagerProxyInvocationHandler(stringManager));
     }

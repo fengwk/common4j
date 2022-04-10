@@ -33,4 +33,9 @@ public class FilterableIdGenerator<ID> implements IdGenerator<ID> {
         return id;
     }
 
+    @Override
+    public void close(boolean releaseResource) throws Exception {
+        idGenerator.close(releaseResource);
+    }
+
 }

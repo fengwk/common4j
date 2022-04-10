@@ -18,7 +18,7 @@ public class ExpressionParser {
     private ExpressionParser() {}
     
     // 解析str[lo, hi)的表达式内容并返回
-    public static String parse(String str, Map<String, Object> ctx) throws OgnlException {
+    public static String parse(String str, Map<String, ?> ctx) throws OgnlException {
         // stack元素为出现OPEN之后的首个位置。
         LinkedList<Integer> stack = new LinkedList<>();
         
@@ -55,7 +55,7 @@ public class ExpressionParser {
         return sbStack.peek().toString();
     }
     
-    private static String doParse(String str, Map<String, Object> ctx) throws OgnlException {
+    private static String doParse(String str, Map<String, ?> ctx) throws OgnlException {
         return String.valueOf(Ognl.getValue(str, ctx));
     }
     

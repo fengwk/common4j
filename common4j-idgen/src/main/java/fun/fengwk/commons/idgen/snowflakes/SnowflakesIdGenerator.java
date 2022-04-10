@@ -1,4 +1,8 @@
-package fun.fengwk.commons.idgen;
+package fun.fengwk.commons.idgen.snowflakes;
+
+import fun.fengwk.commons.idgen.IdGenerator;
+
+import java.util.Objects;
 
 /**
  * 雪花id生成器，为了简化起见，该生成器将datacenterId和machineId统一成workerId，取值范围[0, 1024)。
@@ -31,7 +35,7 @@ public class SnowflakesIdGenerator implements IdGenerator<Long> {
     /** 初始时间戳 **/
     private final long initialTimestamp;
     /** 工作节点编号 **/
-    private final long workerId;
+    private final WorkerIdClient workerIdClient;
     /** 上一次时间戳  **/
     private long lastTimestamp = -1;
     /** 序列号  **/
@@ -40,17 +44,15 @@ public class SnowflakesIdGenerator implements IdGenerator<Long> {
     /**
      * 
      * @param initialTimestamp 初始化时间戳,一旦设置不允许改变
-     * @param workerId 工作节点编号[0, 1024)
+     * @param workerIdClient not null, 工作节点编号客户端
      */
-    public SnowflakesIdGenerator(long initialTimestamp, int workerId) {
+    public SnowflakesIdGenerator(long initialTimestamp, WorkerIdClient workerIdClient) {
         if (initialTimestamp > System.currentTimeMillis()) {
             throw new IllegalArgumentException("Initial timestamp cannot be greater than current time millis.");
         }
-        if (workerId > MAX_NODE_ID || workerId < 0) {
-            throw new IllegalArgumentException("Worker id cannot be greater than " + MAX_NODE_ID + " or less than zero.");
-        }
+
         this.initialTimestamp = initialTimestamp;
-        this.workerId = workerId;
+        this.workerIdClient = Objects.requireNonNull(workerIdClient);
     }
 
     @Override
@@ -75,13 +77,21 @@ public class SnowflakesIdGenerator implements IdGenerator<Long> {
         if (offset > MAX_TIMESTAMP) {
             throw new IllegalStateException("Snow id is invalid because current timestamp greater than " + MAX_TIMESTAMP + ".");
         }
-        
-        return SIGN_MASK & (offset << TO_LEFT_TIMESTAMP | workerId << TO_LEFT_NODE_ID | ns);
+
+        return SIGN_MASK & (offset << TO_LEFT_TIMESTAMP | workerIdClient.get() << TO_LEFT_NODE_ID | ns);
     }
 
     @Override
     public String toString() {
-        return String.format("%s-[%d, %d]", 
-                SnowflakesIdGenerator.class.getSimpleName(), workerId, initialTimestamp);
+        return String.format("%s-[%d, %d]",
+                SnowflakesIdGenerator.class.getSimpleName(), workerIdClient.tryGet(), initialTimestamp);
     }
+
+    @Override
+    public void close(boolean releaseResource) throws Exception {
+        if (releaseResource) {
+            workerIdClient.close();
+        }
+    }
+
 }

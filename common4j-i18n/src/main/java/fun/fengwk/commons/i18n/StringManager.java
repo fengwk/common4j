@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * 本地化字符串管理器。
@@ -47,27 +48,21 @@ public class StringManager {
      * @return
      */
     public String getString(String key) {
-        return getString(key, Collections.emptyMap());
+        return getString(key, null);
     }
     
     /**
      * 通过key获取字符串。
      * 
-     * @param key
+     * @param key not null
      * @param ctx
      * @return
      */
-    public String getString(String key, Map<String, Object> ctx) {
-        Object obj = resourceBundle.getString(realKey(key));
-        if (obj == null) {
-            LOG.warn("Cannot found string by key '{}'", key);
-            return null;
-        }
-        
-        String str = String.valueOf(obj);
+    public String getString(String key, Map<String, ?> ctx) {
+        String str = resourceBundle.getString(realKey(key));
 
         try {
-            return ExpressionParser.parse(str, ctx);
+            return ExpressionParser.parse(str, ctx == null ? Collections.emptyMap() : ctx);
         } catch (OgnlException e) {
             throw new IllegalArgumentException(e);
         }

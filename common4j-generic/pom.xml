@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>common4j-parent</artifactId>
 		<groupId>fun.fengwk.common4j</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>common4j-generic</artifactId>

@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,8 +16,7 @@ public class StringManagerFactoryTest {
 
     @Test
     public void testGetStringManager1() throws IOException {
-        ResourceBundleLoader loader = new PropertiesResourceBundleLoader();
-        ResourceBundle resourceBundle = loader.load("message", Locale.CHINA);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("message", Locale.CHINA, AggregateResourceBundle.CONTROL);
         StringManagerFactory stringManagerFactory = new StringManagerFactory(resourceBundle);
         StringManager stringManager = stringManagerFactory.getStringManager(StringManagerFactoryTest.class);
 
@@ -29,8 +29,7 @@ public class StringManagerFactoryTest {
 
     @Test
     public void testGetStringManager2() throws IOException {
-        ResourceBundleLoader loader = new PropertiesResourceBundleLoader();
-        ResourceBundle resourceBundle = loader.load("message", Locale.ENGLISH);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("message", Locale.ENGLISH, AggregateResourceBundle.CONTROL);
         StringManagerFactory stringManagerFactory = new StringManagerFactory(resourceBundle);
         StringManager stringManager = stringManagerFactory.getStringManager(StringManagerFactoryTest.class);
 
@@ -43,8 +42,7 @@ public class StringManagerFactoryTest {
 
     @Test
     public void testGetStringManager3() throws IOException {
-        ResourceBundleLoader loader = new PropertiesResourceBundleLoader();
-        ResourceBundle resourceBundle = loader.load("message", Locale.CHINA);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("message", Locale.CHINA, AggregateResourceBundle.CONTROL);
         StringManagerFactory stringManagerFactory = new StringManagerFactory(resourceBundle);
         StringManager stringManager = stringManagerFactory.getStringManager(StringManagerFactoryTest.class);
 
@@ -54,19 +52,17 @@ public class StringManagerFactoryTest {
     
     @Test
     public void testGetStringManagerProxy1() throws IOException {
-        ResourceBundleLoader loader = new PropertiesResourceBundleLoader();
-        ResourceBundle resourceBundle = loader.load("message", Locale.CHINA);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("message", Locale.CHINA, AggregateResourceBundle.CONTROL);
         StringManagerFactory stringManagerFactory = new StringManagerFactory(resourceBundle);
-        StringManagerProxy proxy = stringManagerFactory.getStringManagerProxy(StringManagerProxy.class, StringManagerFactoryTest.class);
+        StringManagerProxy proxy = stringManagerFactory.getStringManagerProxy(StringManagerProxy.class, StringManagerFactoryTest.class, StringManagerFactoryTest.class.getClassLoader());
         assert proxy.message("冯先生").equals("你好，冯先生");
     }
     
     @Test
     public void testGetStringManagerProxy2() throws IOException {
-        ResourceBundleLoader loader = new PropertiesResourceBundleLoader();
-        ResourceBundle resourceBundle = loader.load("message", Locale.ENGLISH);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("message", Locale.ENGLISH, AggregateResourceBundle.CONTROL);
         StringManagerFactory stringManagerFactory = new StringManagerFactory(resourceBundle);
-        StringManagerProxy proxy = stringManagerFactory.getStringManagerProxy(StringManagerProxy.class, StringManagerFactoryTest.class);
+        StringManagerProxy proxy = stringManagerFactory.getStringManagerProxy(StringManagerProxy.class, StringManagerFactoryTest.class, StringManagerFactoryTest.class.getClassLoader());
         assert proxy.message2("fengwk", 18).equals("fengwk is 18 years old");
     }
     

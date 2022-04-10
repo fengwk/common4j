@@ -31,7 +31,11 @@ public class FilterableIdGeneratorTest {
         public Integer next() {
             return i++;
         }
-        
+
+        @Override
+        public void close(boolean releaseResource) throws Exception {
+            // nothing to do
+        }
     }
     
 }

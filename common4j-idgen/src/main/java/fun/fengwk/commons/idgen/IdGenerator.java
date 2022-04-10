@@ -5,13 +5,14 @@ package fun.fengwk.commons.idgen;
  *
  * @author fengwk
  */
-public interface IdGenerator<ID> {
+public interface IdGenerator<ID> extends LifeCycle {
 
     /**
      * 生成下一个id。
      * 
      * @return
+     * @throws ClosedException 如果在IdGenerator已关闭，将抛出该异常。
      */
-    ID next();
+    ID next() throws ClosedException;
 
 }

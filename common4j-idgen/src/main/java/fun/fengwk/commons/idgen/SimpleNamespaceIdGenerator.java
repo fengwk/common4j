@@ -1,5 +1,6 @@
 package fun.fengwk.commons.idgen;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -24,6 +25,13 @@ public class SimpleNamespaceIdGenerator<ID> implements NamespaceIdGenerator<ID> 
 
     private IdGenerator<ID> getIdGenerator(String namespace) {
         return registry.computeIfAbsent(namespace, idGeneratorFactory);
+    }
+
+    @Override
+    public void close(boolean releaseResource) throws Exception {
+        for (Map.Entry<String, IdGenerator<ID>> entry : registry.entrySet()) {
+            entry.getValue().close(releaseResource);
+        }
     }
 
 }

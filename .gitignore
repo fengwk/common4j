@@ -95,3 +95,6 @@ buildNumber.properties
 .svn
 
 *.log
+*.gz
+
+.factorypath
